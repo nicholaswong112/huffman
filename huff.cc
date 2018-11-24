@@ -1,0 +1,7 @@
+#include "hftree.h"
+#include "minheap.h"
+#include <stdlib.h>
+
+int main() {
+	return 0;
+}
