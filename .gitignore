@@ -1,0 +1,4 @@
+*.o
+huff
+unhuff
+test
