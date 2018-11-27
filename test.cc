@@ -1,5 +1,6 @@
 #include "hftree.h"
 #include "minheap.h"
+#include "charcounter.h"
 #include <iostream>
 #include <string>
 #include <stdlib.h>
