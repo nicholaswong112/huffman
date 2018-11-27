@@ -28,8 +28,8 @@ class MinHeap {
 	inline int rChildOf(int index) {
 		return 2 * index + 1;
 	}
-	void memcopy(char *from, char *to, int bytes) {
-		for (int i = 0; i < bytes; i++)
+	void memcopy(u_int32_t *from, u_int32_t *to, int entries) {
+		for (int i = 0; i < entries; i++)
 			to[i] = from[i];
 	}
 	inline int switchWithRightChild(int idx) {
@@ -62,9 +62,9 @@ public:
 	void add(T *data, int priority) {
 		// double capacity if full
 		if (size == capacity) {
-			Node<T>** temp = new Node<T>*[capacity * 2];
+			Node<T>** temp = new Node<T>*[capacity * 2 + 1];
 			capacity *= 2;
-			memcopy(arr, temp, size);
+			memcopy((u_int32_t *) arr, (u_int32_t *) temp, size + 1);
 			delete arr;
 			arr= temp;
 		}
@@ -155,7 +155,9 @@ public:
 	}
 
 	T *peek() {
-		return this->arr[1];
+		if (size < 1)
+			return nullptr;
+		return this->arr[1]->data;
 	}
 
 	int getSize() {

@@ -1,4 +1,4 @@
-CC = gcc
+CC = g++
 CFLAGS = -g -Wall -Werror
 
 default: huff unhuff
@@ -9,7 +9,8 @@ huff: huff.o hftree.o minheap.o
 unhuff: unhuff.o hftree.o minheap.o
 	$(CC) $(CFLAGS) -o unhuff unhuff.o hftree.o
 
-test: # TODO
+test: test.o hftree.o minheap.o
+	$(CC) $(CFLAGS) -o test test.o hftree.o
 
 huff.o: huff.cc
 	$(CC) $(CLFAGS) -c huff.cc
@@ -22,9 +23,13 @@ hftree.o: hftree.cc hftree.h
 
 minheap.o: minheap.h
 
+test.o: test.cc
+	$(CC) $(CLFAGS) -c test.cc
+
 clean:
 	rm -f huff
 	rm -f unhuff
+	rm -f test
 	rm -f *.o
 	rm -f *.d
 
