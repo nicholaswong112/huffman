@@ -28,8 +28,8 @@ class MinHeap {
 	inline int rChildOf(int index) {
 		return 2 * index + 1;
 	}
-	void memcopy(u_int32_t *from, u_int32_t *to, int entries) {
-		for (int i = 0; i < entries; i++)
+	void memcopy(char *from, char *to, int bytes) {
+		for (int i = 0; i < bytes; i++)
 			to[i] = from[i];
 	}
 	inline int switchWithRightChild(int idx) {
@@ -64,9 +64,9 @@ public:
 		if (size == capacity) {
 			Node<T>** temp = new Node<T>*[capacity * 2 + 1];
 			capacity *= 2;
-			memcopy((u_int32_t *) arr, (u_int32_t *) temp, size + 1);
+			memcopy((char *) arr, (char *) temp, sizeof(Node<T>*) * (size + 1));
 			delete arr;
-			arr= temp;
+			arr = temp;
 		}
 
 		// place a new Node* in the next available position in arr
