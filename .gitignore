@@ -1,4 +1,5 @@
 *.o
+*.swp
 huff
 unhuff
 test
