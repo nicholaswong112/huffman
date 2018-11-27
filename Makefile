@@ -4,13 +4,13 @@ CFLAGS = -g -Wall -Werror
 default: huff unhuff
 
 huff: huff.o hftree.o minheap.o charcounter.o
-	$(CC) $(CFLAGS) -o huff huff.o hftree.o charcounter.o
+	$(CC) $(CFLAGS) -o huff huff.o hftree.o
 
 unhuff: unhuff.o hftree.o minheap.o charcounter.o
-	$(CC) $(CFLAGS) -o unhuff unhuff.o hftree.o charcounter.o
+	$(CC) $(CFLAGS) -o unhuff unhuff.o hftree.o
 
 test: test.o hftree.o minheap.o charcounter.o
-	$(CC) $(CFLAGS) -o test test.o hftree.o charcounter.o
+	$(CC) $(CFLAGS) -o test test.o hftree.o
 
 huff.o: huff.cc
 	$(CC) $(CLFAGS) -c huff.cc
@@ -21,8 +21,7 @@ unhuff.o: unhuff.cc
 hftree.o: hftree.cc hftree.h
 	$(CC) $(CLFAGS) -c hftree.cc
 
-charcounter.o: charcounter.cc charcounter.h
-	$(CC) $(CLFAGS) -c charcounter.cc
+charcounter.o: charcounter.h
 
 minheap.o: minheap.h
 
