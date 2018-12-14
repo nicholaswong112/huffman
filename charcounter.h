@@ -5,8 +5,11 @@
 #include <stdint.h>
 
 class CharCounter {
+public:
+	static const int MAX_CHAR_VALUE = 256;
 
-	uint32_t counts[256];
+private:
+	uint32_t counts[MAX_CHAR_VALUE];
 
 public:
 

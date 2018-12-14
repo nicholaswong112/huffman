@@ -13,20 +13,20 @@ test: test.o hftree.o minheap.o charcounter.o
 	$(CC) $(CFLAGS) -o test test.o hftree.o
 
 huff.o: huff.cc
-	$(CC) $(CLFAGS) -c huff.cc
+	$(CC) $(CFLAGS) -c huff.cc
 
 unhuff.o: unhuff.cc
-	$(CC) $(CLFAGS) -c unhuff.cc
+	$(CC) $(CFLAGS) -c unhuff.cc
 
 hftree.o: hftree.cc hftree.h
-	$(CC) $(CLFAGS) -c hftree.cc
+	$(CC) $(CFLAGS) -c hftree.cc
 
 charcounter.o: charcounter.h
 
 minheap.o: minheap.h
 
 test.o: test.cc
-	$(CC) $(CLFAGS) -c test.cc
+	$(CC) $(CFLAGS) -c test.cc
 
 clean:
 	rm -f huff
