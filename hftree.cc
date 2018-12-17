@@ -3,9 +3,12 @@
 #include "minheap.h"
 #include <stdlib.h>
 #include <string>
+#include <iostream>
 #include <unordered_map>
 
 #define EOF_VALUE 256
+
+using std::cout;
 
 // given a CharCounter, generates the huffman tree
 HFTree::HFTree(CharCounter *cc) : charcounts(cc), encoding() {
@@ -24,6 +27,9 @@ HFTree::HFTree(CharCounter *cc) : charcounts(cc), encoding() {
 
 	// repeatedly combine small trees together
 	while (pq.getSize() > 1) {
+
+		cout << "size of pq: " << pq.getSize() << std::endl;
+
 		TreeNode *x = pq.remove();
 		TreeNode *y = pq.remove();
 

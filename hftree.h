@@ -23,9 +23,6 @@ class HFTree {
 	TreeNode *current;
 	encodingmap encoding;
 
-	// frees the HFTree (just Nodes, CharCounter is callers responsibility)
-	~HFTree();
-
 	// helps to free TreeNodes
 	void freeNode(TreeNode *node);
 
@@ -37,6 +34,10 @@ public:
 	// given a CharCounter, generates the huffman tree
 	HFTree(CharCounter *cc);
 
+	// frees the HFTree (just Nodes, CharCounter is callers responsibility)
+	~HFTree();
+
+	// helps to free TreeNodes
 	// FOR ENCODING
 	// generates the encoding mapping
 	encodingmap generateEncoding();
