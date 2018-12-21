@@ -166,125 +166,68 @@ void minheapTest() {
 
 }
 
-void hftreeTest() {
-
-	char original[] = "abbcccddddeeeee";
-
-	cout << "Original: " << original << std::endl;
-
-	uint8_t encoded[15]; // should be at most the uncompressed length
-
-	CharCounter cc;
-	for (int i = 0; i < 15; i++)
-		cc.increment(original[i]);
-
-	cout << "Got the char counts\n";
+void charCounterTest() {
 
 	{
-		// FAKE ENCODING
-		HFTree hft {&cc};
-		encodingmap map = hft.generateEncoding();
+		CharCounter cc;
 
-		cout << "Got the encoding map\n";
-
-		// encoding the original
-		int bit = 0;
-		for (int i = 0; i < 15; i++) {
-			std::string encoding = map[original[i]];
-
-			cout << "about to encode " << original[i] << std::endl;
-
-			for (unsigned j = 0; j < encoding.length(); j++) {
-				int byte = bit / 8;
-				int inbit = bit % 8;
-
-				if (encoding[j] == '1') {
-					encoded[byte] = encoded[byte] | (1 << (7 - inbit));
-
-				} else if (encoding[j] == '0') {
-					encoded[byte] = encoded[byte] & (~(1 << (7 - inbit)));
-
-				} else {
-					cout << "The encoding contains stuff other than 0 or 1\n";
-					exit(-1);
-				}
-
-				bit++;
-			}
-
-		}
-
-		// getting the psuedo EOF
-		std::string encoding = map[(char) CharCounter::MAX_CHAR_VALUE];
-
-		for (unsigned j = 0; j < encoding.length(); j++) {
-			int byte = bit / 8;
-			int inbit = bit % 8;
-
-			if (encoding[j] == '1') {
-				encoded[byte] = encoded[byte] | (1 << (7 - inbit));
-
-			} else if (encoding[j] == '0') {
-				encoded[byte] = encoded[byte] & (~(1 << (7 - inbit)));
-
-			} else {
-				cout << "The encoding contains stuff other than 0 or 1\n";
+		// initial values should all be 0
+		unsigned char c = 0;
+		for (int i = 0; i < CharCounter::MAX_CHAR_VALUE; i++, c++) {
+			if (cc.getCount(c) != 0) {
+				printf("init count for char %d is %d\n", c, cc.getCount(c));
 				exit(-1);
 			}
-
-			bit++;
 		}
 
-	}
+		cc.increment('a');
 
-	{
-		// FAKE DECODING
-		HFTree hft {&cc};
-
-		char decoded[16];
-		decoded[15] = '\0';
-		int index = 0;
-
-		char decodedChar = (char) 0;
-
-		int bitIdx = 0;
-
-		while (decodedChar != (char) CharCounter::MAX_CHAR_VALUE) {
-
-			int bit;
-
-			do {
-				int byte = bitIdx / 8;
-				int bitPos = bitIdx % 8;
-
-				bit = (encoded[byte] & (1 << (7 - bitPos))) >> (7 - bitPos);
-
-				cout << "got bit " << bit << " at bitIdx " << bitIdx << std::endl;
-
-				bitIdx++;
-
-			} while (!hft.processBit(bit, &decodedChar));
-
-			if (decodedChar == (char) CharCounter::MAX_CHAR_VALUE)
-				break;
-
-			decoded[index++] = decodedChar;
-
-			if (index > 14) {
-				cout << "Hm, decoded more chars than were encoded...\n";
-				exit(-1);
-			}
-
-		}
-
-		if (index != 15) {
-			cout << "Didn't decode the right amount of chars\n";
+		if (cc.getCount('a') != 1) {
+			cout << "incrementing 'a' had no effect\n";
 			exit(-1);
 		}
 
-		cout << "Decoded: " << decoded << std::endl;
+		c = 0;
+		for (int i = 0; i < CharCounter::MAX_CHAR_VALUE; i++, c++)
+			cc.increment(c);
+
+		c = 0;
+		for (int i = 0; i < CharCounter::MAX_CHAR_VALUE; i++, c++) {
+			unsigned target = c == 'a' ? 2 : 1;
+			if (cc.getCount(c) != target) {
+				printf("count for char %d is incorrect\n", c);
+				exit(-1);
+			}
+		}
 
 	}
+
+	{
+		std::string text =
+			"welkrj43230fjdsfknl2rMa6pOtsxYuqiel0tX4UXQEY9VnO9GJL4ILla7hknWd9h5zSS9xseTC7qwxMBeUAwqaj1twKEQPdowt2ZHRRhqv4UC2gLWN6jHnWr0O2FK8tGsXwMuz0HjCmPxrUl8tODgqqdbLBuSiCzuIqcWOkGmLSLUsPwWcKCkdpzTKngk1Owf64oQoj";
+		CharCounter cc;
+
+		for (unsigned i = 0; i < text.length(); i++)
+			cc.increment(text[i]);
+
+		int count;
+
+		unsigned char c = 0;
+		for (int i = 0; i < CharCounter::MAX_CHAR_VALUE; i++, c++)
+			count += cc.getCount(c);
+
+		if (count != 200) {
+			cout << "count is " << count << ", should be 200\n";
+			exit(-1);
+		}
+
+	}
+
+	cout << "[charCounterTest passed]\n";
+
+}
+
+void hftreeTest() {
 
 	cout << "[hftreeTest passed]\n";
 
@@ -296,7 +239,9 @@ int main() {
 
 	minheapTest();
 
-	hftreeTest();
+	charCounterTest();
+
+	//hftreeTest();
 
 	cout << "All tests passed\n";
 

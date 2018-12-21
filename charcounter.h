@@ -3,6 +3,11 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
+
+/*
+ * Keeps track of ASCII character count
+*/
 
 class CharCounter {
 public:
@@ -13,12 +18,16 @@ private:
 
 public:
 
-	void increment(char c) {
-		counts[(int) c]++;
+	CharCounter() {
+		memset(counts, 0, MAX_CHAR_VALUE * sizeof(uint32_t));
 	}
 
-	uint32_t getCount(char c) {
-		return counts[(int) c];
+	void increment(unsigned char c) {
+		counts[c]++;
+	}
+
+	uint32_t getCount(unsigned char c) {
+		return counts[c];
 	}
 
 };
