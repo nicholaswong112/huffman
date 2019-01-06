@@ -7,14 +7,15 @@
 #include <unordered_map>
 
 typedef struct TreeNode {
-	uint32_t value;
+	int32_t value;
 	TreeNode *left;
 	TreeNode *right;
-	char c;
+	int ch;
 	bool isLeaf;
 } TreeNode;
 
-typedef std::unordered_map<char, std::string> encodingmap;
+// maps from int ASCII value to a string of 0s and 1s
+typedef std::unordered_map<int, std::string> encodingmap;
 
 class HFTree {
 
@@ -48,7 +49,7 @@ public:
 	//   the character is put at *c
 	// Otherwise, false is returned and the internal state of
 	//   the HFTree is change accordingly
-	bool processBit(int bit, char *c);
+	bool processBit(int bit, int *c);
 
 };
 

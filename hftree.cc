@@ -16,19 +16,17 @@ HFTree::HFTree(CharCounter *cc) : charcounts(cc), encoding() {
 	MinHeap<TreeNode> pq;
 
 	// for all nonzero char counts, add the Node to pq
-	for (char c = 0; c < CharCounter::MAX_CHAR_VALUE; c++) {
+	for (int c = 0; c < CharCounter::MAX_CHAR_VALUE; c++) {
 		if (cc->getCount(c) != 0)
 			pq.add(new TreeNode {cc->getCount(c), nullptr, nullptr, c, true},
 					cc->getCount(c));
 	}
 
 	// add the pseudo EOF
-	pq.add(new TreeNode {1, nullptr, nullptr, (char) EOF_VALUE, true}, 1);
+	pq.add(new TreeNode {1, nullptr, nullptr, EOF_VALUE, true}, 1);
 
 	// repeatedly combine small trees together
 	while (pq.getSize() > 1) {
-
-		cout << "size of pq: " << pq.getSize() << std::endl;
 
 		TreeNode *x = pq.remove();
 		TreeNode *y = pq.remove();
@@ -62,7 +60,7 @@ HFTree::~HFTree() {
 void HFTree::findEncodings(TreeNode *n, std::string path) {
 	if (n == nullptr) return;
 	if (n->isLeaf) {
-		encoding[n->c] = path;
+		encoding[n->ch] = path;
 		return;
 	}
 	std::string left(path);
@@ -87,7 +85,7 @@ encodingmap HFTree::generateEncoding() {
 //   the character is put at *c
 // Otherwise, false is returned and the internal state of
 //   the HFTree is change accordingly
-bool HFTree::processBit(int bit, char *c) {
+bool HFTree::processBit(int bit, int *c) {
 	if (bit != 0 && bit != 1) {
 		perror("bit needs to be 0 or 1");
 		exit(-1);
@@ -104,7 +102,7 @@ bool HFTree::processBit(int bit, char *c) {
 	}
 
 	if (current->isLeaf) {
-		*c = current->c;
+		*c = current->ch;
 		current = head;
 		return true;
 	}

@@ -14,7 +14,7 @@ public:
 	static const int MAX_CHAR_VALUE = 256;
 
 private:
-	uint32_t counts[MAX_CHAR_VALUE];
+	int32_t counts[MAX_CHAR_VALUE];
 
 public:
 
@@ -22,11 +22,13 @@ public:
 		memset(counts, 0, MAX_CHAR_VALUE * sizeof(uint32_t));
 	}
 
-	void increment(unsigned char c) {
+	void increment(int c) {
+		if (c < 0 || c >= MAX_CHAR_VALUE) return;
 		counts[c]++;
 	}
 
-	uint32_t getCount(unsigned char c) {
+	int32_t getCount(int c) {
+		if (c < 0 || c >= MAX_CHAR_VALUE) return -1;
 		return counts[c];
 	}
 

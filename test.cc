@@ -172,10 +172,9 @@ void charCounterTest() {
 		CharCounter cc;
 
 		// initial values should all be 0
-		unsigned char c = 0;
-		for (int i = 0; i < CharCounter::MAX_CHAR_VALUE; i++, c++) {
-			if (cc.getCount(c) != 0) {
-				printf("init count for char %d is %d\n", c, cc.getCount(c));
+		for (int i = 0; i < CharCounter::MAX_CHAR_VALUE; i++) {
+			if (cc.getCount(i) != 0) {
+				printf("init count for char %d is %d\n", i, cc.getCount(i));
 				exit(-1);
 			}
 		}
@@ -187,15 +186,13 @@ void charCounterTest() {
 			exit(-1);
 		}
 
-		c = 0;
-		for (int i = 0; i < CharCounter::MAX_CHAR_VALUE; i++, c++)
-			cc.increment(c);
+		for (int i = 0; i < CharCounter::MAX_CHAR_VALUE; i++)
+			cc.increment(i);
 
-		c = 0;
-		for (int i = 0; i < CharCounter::MAX_CHAR_VALUE; i++, c++) {
-			unsigned target = c == 'a' ? 2 : 1;
-			if (cc.getCount(c) != target) {
-				printf("count for char %d is incorrect\n", c);
+		for (int i = 0; i < CharCounter::MAX_CHAR_VALUE; i++) {
+			int target = i == 'a' ? 2 : 1;
+			if (cc.getCount(i) != target) {
+				printf("count for char %d is incorrect\n", i);
 				exit(-1);
 			}
 		}
@@ -205,16 +202,16 @@ void charCounterTest() {
 	{
 		std::string text =
 			"welkrj43230fjdsfknl2rMa6pOtsxYuqiel0tX4UXQEY9VnO9GJL4ILla7hknWd9h5zSS9xseTC7qwxMBeUAwqaj1twKEQPdowt2ZHRRhqv4UC2gLWN6jHnWr0O2FK8tGsXwMuz0HjCmPxrUl8tODgqqdbLBuSiCzuIqcWOkGmLSLUsPwWcKCkdpzTKngk1Owf64oQoj";
+
 		CharCounter cc;
 
-		for (unsigned i = 0; i < text.length(); i++)
+		for (int i = 0; i < (int) text.length(); i++)
 			cc.increment(text[i]);
 
-		int count;
+		int count = 0;
 
-		unsigned char c = 0;
-		for (int i = 0; i < CharCounter::MAX_CHAR_VALUE; i++, c++)
-			count += cc.getCount(c);
+		for (int i = 0; i < CharCounter::MAX_CHAR_VALUE; i++)
+			count += cc.getCount(i);
 
 		if (count != 200) {
 			cout << "count is " << count << ", should be 200\n";
@@ -229,6 +226,68 @@ void charCounterTest() {
 
 void hftreeTest() {
 
+	// should generate the same encodingmap
+	{
+		std::string text =
+			"welkrj43230fjdsfknl2rMa6pOtsxYuqiel0tX4UXQEY9VnO9GJL4ILla7hknWd9h5zSS9xseTC7qwxMBeUAwqaj1twKEQPdowt2ZHRRhqv4UC2gLWN6jHnWr0O2FK8tGsXwMuz0HjCmPxrUl8tODgqqdbLBuSiCzuIqcWOkGmLSLUsPwWcKCkdpzTKngk1Owf64oQoj";
+
+		CharCounter cc;
+		for (int i = 0; i < (int) text.length(); i++)
+			cc.increment(text[i]);
+
+		HFTree temp (&cc);
+		auto map1 = temp.generateEncoding();
+
+		HFTree temp2 (&cc);
+		auto map2 = temp2.generateEncoding();
+
+
+		for (int i = 0; i <= 256; i++) {
+			if (map1[i] != map2[i]) {
+				cout << "map1 and map2 differ at entry " << i << std::endl;
+				exit(-1);
+			}
+		}
+	}
+
+	// encodings should match with decoding
+	{
+		std::string input =
+			"N/sQxDt3<N}^m_Vtkq?6B2jp*D6Zo?->0.|hZ[h1zK>AV=Kvm{jTe)xXHM2GS;BfY4<8!DnQ<wI+{wZ&@izdx2O]h%|cE)M?^(G)0;'$b%)8X*j.QWIm4Bb%$<[sLn|.]S10VlPJ0jO0x])-f,UUc{!&c|)2G+83ppf.F8!!@CfI]%ij03!\0oAT00jG&YGm'mb8Ln";
+
+		CharCounter cc;
+		for (int i = 0; i < (int) input.length(); i++)
+			cc.increment(input[i]);
+
+		HFTree temp (&cc);
+		auto map = temp.generateEncoding();
+
+		for (int i = 0; i < (int) input.length(); i++) {
+			char c = input[i];
+			std::string encoding = map[c];
+			int character;
+			for (int pos = 0; pos < (int) encoding.length() - 1; pos++) {
+				if (temp.processBit(encoding[pos] - '0', &character)) {
+					cout << "Leaf encounter at encoding pos " << pos <<
+						std::endl;
+					exit(-1);
+				}
+			}
+			if (!temp.processBit(encoding[encoding.length() - 1] - '0',
+						&character)) {
+				cout << "Didn't encounter leaf\n";
+				exit(-1);
+			}
+			if ((char) character != c) {
+				cout << (char) character << " and " << c << " don't match\n";
+				exit(-1);
+			}
+
+		}
+
+
+	}
+
 	cout << "[hftreeTest passed]\n";
 
 }
@@ -237,11 +296,14 @@ void hftreeTest() {
 
 int main() {
 
+	cout << "Starting minheap test...\n";
 	minheapTest();
 
+	cout << "Starting charCounter test...\n";
 	charCounterTest();
 
-	//hftreeTest();
+	cout << "Starting hftree test...\n";
+	hftreeTest();
 
 	cout << "All tests passed\n";
 
