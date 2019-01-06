@@ -9,14 +9,11 @@
  * Keeps track of ASCII character count
 */
 
-class CharCounter {
-public:
+typedef struct CharCounter {
+
 	static const int MAX_CHAR_VALUE = 256;
 
-private:
 	int32_t counts[MAX_CHAR_VALUE];
-
-public:
 
 	CharCounter() {
 		memset(counts, 0, MAX_CHAR_VALUE * sizeof(uint32_t));
@@ -32,6 +29,6 @@ public:
 		return counts[c];
 	}
 
-};
+} CharCounter;
 
 #endif

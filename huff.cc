@@ -15,19 +15,27 @@ int main(int argc, char	*argv[]) {
 		return -1;
 	}
 
+	// TODO check if infile is .txt
+
 	ifstream infile (argv[1]);
 	if (infile.is_open()) {
 		// make the char counts
-		CharCounter *cc = new CharCounter;
-
-		string line;
-		while (getline(infile, line)) {
-			for (unsigned i = 0; i < line.length(); i++)
-				cc->increment(str.at(i));
+		CharCounter cc;
+		while (true) {
+			int ch = infile.get();
+			// check if EOF
+			if (infile.eof())
+				break;
+			// check if ASCII
+			if (ch < 0 || ch >= CharCounter::MAX_CHAR_VALUE) {
+				cout << "File contains non-ASCII characters\n";
+				exit(-1);
+			}
+			cc.increment(ch);
 		}
 
 		// make the hufftree
-		HFTree hftree {cc};
+		HFTree hftree {&cc};
 
 		// create the encoded file
 		string out (argv[1]);
@@ -40,24 +48,21 @@ int main(int argc, char	*argv[]) {
 		}
 
 		// output the char counts
-		for (char i = 0; i < CharCounter::MAX_CHAR_VALUE; i++)
-			outfile.write((char *) &(cc->getCount(i)), 4);
+		outfile.write((char *) &cc.counts, 4 * CharCounter::MAX_CHAR_VALUE);
 
 		// output the encodings
 		encodingmap map = hftree.generateEncoding();
 		string encoding;
 
 		infile.seekg(0, ios::beg);
-		while (getline(infile, line)) {
-			for (unsigned i = 0; i < line.length(); i++) {
-				char c = str.at(i);
-				encoding = map[c];
-				// TODO write the encoding string in binary
-			}
+		while (true) {
+			int ch = infile.get();
+			// check if EOF
+			if ((infile.rdstate() & ifstream::failbit) != 0)
+				break;
+			// TODO add bits to a buffer
 		}
 
-
-		delete cc;
 
 	} else {
 		cout << "Unable to open file\n\n";
