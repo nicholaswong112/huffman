@@ -16,7 +16,7 @@ HFTree::HFTree(CharCounter *cc) : charcounts(cc), encoding() {
 	MinHeap<TreeNode> pq;
 
 	// for all nonzero char counts, add the Node to pq
-	for (int c = 0; c < CharCounter::MAX_CHAR_VALUE; c++) {
+	for (int c = 0; c < MAX_CHAR_VALUE; c++) {
 		if (cc->getCount(c) != 0)
 			pq.add(new TreeNode {cc->getCount(c), nullptr, nullptr, c, true},
 					cc->getCount(c));

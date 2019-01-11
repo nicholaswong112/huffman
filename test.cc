@@ -172,7 +172,7 @@ void charCounterTest() {
 		CharCounter cc;
 
 		// initial values should all be 0
-		for (int i = 0; i < CharCounter::MAX_CHAR_VALUE; i++) {
+		for (int i = 0; i < MAX_CHAR_VALUE; i++) {
 			if (cc.getCount(i) != 0) {
 				printf("init count for char %d is %d\n", i, cc.getCount(i));
 				exit(-1);
@@ -186,10 +186,10 @@ void charCounterTest() {
 			exit(-1);
 		}
 
-		for (int i = 0; i < CharCounter::MAX_CHAR_VALUE; i++)
+		for (int i = 0; i < MAX_CHAR_VALUE; i++)
 			cc.increment(i);
 
-		for (int i = 0; i < CharCounter::MAX_CHAR_VALUE; i++) {
+		for (int i = 0; i < MAX_CHAR_VALUE; i++) {
 			int target = i == 'a' ? 2 : 1;
 			if (cc.getCount(i) != target) {
 				printf("count for char %d is incorrect\n", i);
@@ -210,7 +210,7 @@ void charCounterTest() {
 
 		int count = 0;
 
-		for (int i = 0; i < CharCounter::MAX_CHAR_VALUE; i++)
+		for (int i = 0; i < MAX_CHAR_VALUE; i++)
 			count += cc.getCount(i);
 
 		if (count != 200) {

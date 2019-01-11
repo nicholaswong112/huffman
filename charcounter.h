@@ -9,9 +9,9 @@
  * Keeps track of ASCII character count
 */
 
-typedef struct CharCounter {
+static const int MAX_CHAR_VALUE = 256;
 
-	static const int MAX_CHAR_VALUE = 256;
+typedef struct CharCounter {
 
 	int32_t counts[MAX_CHAR_VALUE];
 
