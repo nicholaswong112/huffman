@@ -46,7 +46,7 @@ int main(int argc, char	*argv[]) {
 
 		cout << "Huffman tree created\n";
 
-		// create the encoded file
+		// create the encoded file TODO strip '.txt'
 		string out (argv[1]);
 		out.append(".hf");
 		ofstream outfile (out, ios::out|ios::binary|ios::trunc);
@@ -74,9 +74,9 @@ int main(int argc, char	*argv[]) {
 		infile.seekg(0, ios::beg);
 
 		// will write out the 1024 bytes whenever it fills
-		const int buffersize = 256;
+		const int buffersize = 1024;
 		int size = 0;
-		uint32_t buffer[buffersize];
+		uint8_t buffer[buffersize];
 
 		while (!eof) {
 			int ch = infile.get();
@@ -91,15 +91,15 @@ int main(int argc, char	*argv[]) {
 
 			for (int i = 0; i < (int) encoding.length(); i++) {
 
-				int idx = size / 32;
-				int bit = size % 32;
+				int idx = size / 8;
+				int bit = size % 8;
 
 				if (encoding[i] == '0') {
 					// set the (size+1)-th bit from the left to 0
-					buffer[idx] &= ~(1 << (31 - bit));
+					buffer[idx] &= ~(1 << (7 - bit));
 				} else if (encoding[i] == '1') {
 					// set the (size+1)-th bit from the left to 1
-					buffer[idx] |= 1 << (31 - bit);
+					buffer[idx] |= 1 << (7 - bit);
 				} else {
 					cout << "Encoding wasn't binary, whaaat\n";
 					exit(-1);
@@ -108,7 +108,7 @@ int main(int argc, char	*argv[]) {
 
 				// if buffer is full, write it out
 				if (size == 8192) {
-					outfile.write((char *) &buffer, 4 * buffersize);
+					outfile.write((char *) &buffer, buffersize);
 					size = 0;
 				}
 			}
