@@ -17,7 +17,13 @@ int main(int argc, char *argv[]) {
 		return -1;
 	}
 
-	// TODO check if infile is .hf
+	// check if infile is .hf
+	int len = strlen(argv[1]);
+	char *ext = argv[1] + len - 3;
+	if (strcmp(ext, ".hf") != 0) {
+		cout << "Input file should be .hf\n";
+		exit(-1);
+	}
 
 	ifstream infile (argv[1]);
 	if (infile.is_open()) {
@@ -35,7 +41,8 @@ int main(int argc, char *argv[]) {
 
 		cout << "Huffman tree created\n";
 
-		// created the decoded file TODO strip .hf
+		// created the decoded file
+		*ext = '\0';
 		string out (argv[1]);
 		out.append(".txt");
 		ofstream outfile (out, ios::out|ios::trunc);
